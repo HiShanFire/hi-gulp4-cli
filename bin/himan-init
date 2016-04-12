@@ -8,30 +8,46 @@ var path = require('path'),
 ;
 
 
-inquirer.prompt([{
-  type: 'confirm',
-  message: inPlace
-    ? 'Generate project in current directory?'
-    : 'Target directory exists. Continue?',
-  name: 'ok'
-}], function (answers) {
-    console.log(answers)
-  if (answers.ok) {
-    console.log('ok')
-  }
-})
+// inquirer.prompt([{
+//   type: 'confirm',
+//   message: false
+//     ? 'Generate project in current directory?'
+//     : 'Target directory exists. Continue?',
+//   name: 'p'
+// }], function (answers) {
+//     console.log(answers)
+//   if (answers.ok) {
+//     console.log('ok')
+//   }
+// })
+// var datas = request('http://127.0.0.1:8000/a.zip').pipe(fs.createWriteStream('abc.zip'))
+
+// var zipData = require(path.join(process.cwd(),'a.zip'))
+//
+// var zip = new require('node-zip')(zipData, {base64: false, checkCRC32: true});
+// console.log(zip)
+// console.log(zip.files['test.file']); // hello there
+
+// const LOCAL_VERSION = require('../resources/version.json');
+// var b = LOCAL_VERSION;
+// b.version = "9999";
+// console.log(b)
+
+// fs.open('../resources/version.json', 'w+', function(err, fd){
+//   console.log(fd)
+// })
 
 const SRC = __dirname,
       SRC_MODULES = path.resolve(SRC, '../node_modules'),
       DIST = process.cwd()
 ;
 
-console.log(SRC_MODULES)
+// console.log(SRC_MODULES)
 var copyNodeModules = () => {
     // return;
     fse.copy( SRC_MODULES, path.join(DIST, 'node_modules'), (err) => {
         if(err) return console.log(err);
-        console.log('copy success! === node_modules/')
+        console.log(chalk.green('copy success! === node_modules/'))
     })
 }
 // copyNodeModules();
@@ -39,10 +55,10 @@ var copyNodeModules = () => {
 var copyGulpFile = ()=>{
     fse.copy(path.resolve(SRC, '../resources'), DIST, (err)=>{
         if(err) return console.log(err);
-        console.log('copy success! === gulpfile.js ')
+        console.log(chalk.green('copy success! === gulpfile.js '))
     })
 }
-copyGulpFile();
+// copyGulpFile();
 
 // program
 //     .version('0.0.1')
