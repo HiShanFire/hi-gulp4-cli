@@ -1,11 +1,17 @@
 {
   "name": "hi-gulp4-cli",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "building",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin" : {
+    "himan": "./bin/himan.js"
+  },
   "author": "LinHai",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
 }

@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+var path = require('path'),
+    fs = require('fs'),
+    fse = require('fs-extra')
+;
+
+const SRC = __dirname,
+      SRC_MODULES = path.resolve(SRC, '../node_modules'),
+      DIST = process.cwd()
+;
+
+console.log(SRC_MODULES)
+var copyNodeModules = () => {
+    // return;
+    fse.copy( SRC_MODULES, path.join(DIST, 'node_modules'), (err) => {
+        if(err) return console.log(err);
+        console.log('copy success! === node_modules/')
+    })
+}
+copyNodeModules();
+
+
+// program
+//     .version('0.0.1')
+//     .command('init', 'foo')
+//     .action(function(){
+//         console.log(123)
+//     });
+//
+// program.parse(process.argv)

@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+var path = require('path'),
+    fs = require('fs'),
+    fse = require('fs-extra'),
+    request = require('request'),
+    chalk = require('chalk'),
+    inquirer = require('inquirer')
+;
+
+
+inquirer.prompt([{
+  type: 'confirm',
+  message: inPlace
+    ? 'Generate project in current directory?'
+    : 'Target directory exists. Continue?',
+  name: 'ok'
+}], function (answers) {
+    console.log(answers)
+  if (answers.ok) {
+    console.log('ok')
+  }
+})
+
+const SRC = __dirname,
+      SRC_MODULES = path.resolve(SRC, '../node_modules'),
+      DIST = process.cwd()
+;
+
+console.log(SRC_MODULES)
+var copyNodeModules = () => {
+    // return;
+    fse.copy( SRC_MODULES, path.join(DIST, 'node_modules'), (err) => {
+        if(err) return console.log(err);
+        console.log('copy success! === node_modules/')
+    })
+}
+// copyNodeModules();
+
+var copyGulpFile = ()=>{
+    fse.copy(path.resolve(SRC, '../resources'), DIST, (err)=>{
+        if(err) return console.log(err);
+        console.log('copy success! === gulpfile.js ')
+    })
+}
+copyGulpFile();
+
+// program
+//     .version('0.0.1')
+//     .command('init', 'foo')
+//     .action(function(){
+//         console.log(123)
+//     });
+//
+// program.parse(process.argv)
