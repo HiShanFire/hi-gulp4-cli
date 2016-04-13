@@ -9,13 +9,13 @@ var path = require('path'),
     ora = require('ora')
 ;
 
-var $version = 'nothing';
+var $version = 'will download repo~~';
 try{
     $version = require('../.tmp/$config').version
 }catch(err){
     console.log(err)
 }
-console.log($version)
+console.log(chalk.blue($version))
 //
 
 const $tmp = path.resolve(__dirname, '../.tmp')
@@ -23,22 +23,20 @@ const $tmp = path.resolve(__dirname, '../.tmp')
 ;
 request(
     {
-        url: "https://github.com/HiShanFire/hi-gulp4-cli/raw/master/resources/$config.js"
+        url: "https://github.com/HiShanFire/hi-gulp4-cli-deps/raw/master/resources/$config.js"
     },
     (err, res, body) => {
-
         if(getVersion(body) == $version) return cloneNodeModules();
 
         var spinner = ora("downloading node_modules...")
         spinner.start();
-        downloadRepo('HiShanFire/hi-gulp-cli', $tmp, {clone:false}, (err)=>{
+        downloadRepo('HiShanFire/hi-gulp-cli-deps', $tmp, {clone:false}, (err)=>{
             spinner.stop();
             if(err) return console.log(err)
             console.log();
             console.log(chalk.green('download success!'))
         })
         cloneNodeModules();
-        // .pipe(fs.createWriteStream($version_tmp))
     }
 )
 
@@ -49,43 +47,14 @@ function getVersion(data){
             +'})()')
 }
 
-
-
 function cloneNodeModules(){
-    fse.copy( $tmp, $dist, (err) => {
-        if(err) return console.log(err);
-        console.log(chalk.green('copy success!'))
+    fse.copy( $tmp, $dist,
+        (data)=>{
+            if(data == path.resolve($tmp, 'package.json')) return false;
+            return true;
+        },
+        (err) => {
+            if(err) return console.log(err);
+            console.log(chalk.green('copy success!'))
     })
 }
-// request(
-//     {
-//         url: "https://github.com/HiShanFire/hi-gulp4-cli/raw/master/package.json"
-//     },
-//     function(err, res, body){
-//         var version = JSON.parse(body).version;
-//         console.log(local_version)
-//         console.log(version)
-//         var spinner = ora('downloading node_modules')
-//         spinner.start()
-//         downloadRepo('HiShanFire/hi-gulp4-cli', ydist, {clone:false}, (err)=>{
-//             if(err) return console.log(err)
-//             console.log(chalk.green('download success!'))
-//             spinner.stop()
-//         })
-//         // if(local_version.version == version){
-//         //     console.log('match')
-//         // }else{
-//         //     console.log('no match')
-//         // }
-//     }
-// )
-//
-
-// program
-//     .version('0.0.1')
-//     .command('init', 'foo')
-//     .action(function(){
-//         console.log(123)
-//     });
-//
-// program.parse(process.argv)
