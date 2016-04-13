@@ -23,20 +23,22 @@ const $tmp = path.resolve(__dirname, '../.tmp')
 ;
 request(
     {
-        url: "https://github.com/HiShanFire/hi-gulp4-cli-deps/raw/master/resources/$config.js"
+        url: "https://raw.githubusercontent.com/HiShanFire/hi-gulp4-cli-deps/master/$config.js"
     },
     (err, res, body) => {
         if(getVersion(body) == $version) return cloneNodeModules();
 
         var spinner = ora("downloading node_modules...")
+        console.log()
         spinner.start();
-        downloadRepo('HiShanFire/hi-gulp-cli-deps', $tmp, {clone:false}, (err)=>{
+        downloadRepo('HiShanFire/hi-gulp4-cli-deps', $tmp, {clone:false}, (err)=>{
             spinner.stop();
             if(err) return console.log(err)
             console.log();
             console.log(chalk.green('download success!'))
+            cloneNodeModules();
         })
-        cloneNodeModules();
+
     }
 )
 
