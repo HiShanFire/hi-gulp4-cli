@@ -4,61 +4,82 @@ var path = require('path'),
     fse = require('fs-extra'),
     request = require('request'),
     chalk = require('chalk'),
-    inquirer = require('inquirer')
+    inquirer = require('inquirer'),
+    downloadRepo = require('download-git-repo'),
+    ora = require('ora')
 ;
 
-
-// inquirer.prompt([{
-//   type: 'confirm',
-//   message: false
-//     ? 'Generate project in current directory?'
-//     : 'Target directory exists. Continue?',
-//   name: 'p'
-// }], function (answers) {
-//     console.log(answers)
-//   if (answers.ok) {
-//     console.log('ok')
-//   }
-// })
-// var datas = request('http://127.0.0.1:8000/a.zip').pipe(fs.createWriteStream('abc.zip'))
-
-// var zipData = require(path.join(process.cwd(),'a.zip'))
+var $version = 'nothing';
+try{
+    $version = require('../.tmp/$config').version
+}catch(err){
+    console.log(err)
+}
+console.log($version)
 //
-// var zip = new require('node-zip')(zipData, {base64: false, checkCRC32: true});
-// console.log(zip)
-// console.log(zip.files['test.file']); // hello there
 
-// const LOCAL_VERSION = require('../resources/version.json');
-// var b = LOCAL_VERSION;
-// b.version = "9999";
-// console.log(b)
-
-// fs.open('../resources/version.json', 'w+', function(err, fd){
-//   console.log(fd)
-// })
-
-const SRC = __dirname,
-      SRC_MODULES = path.resolve(SRC, '../node_modules'),
-      DIST = process.cwd()
+const $tmp = path.resolve(__dirname, '../.tmp')
+      $dist = process.cwd()
 ;
+request(
+    {
+        url: "https://github.com/HiShanFire/hi-gulp4-cli/raw/master/resources/$config.js"
+    },
+    (err, res, body) => {
 
-// console.log(SRC_MODULES)
-var copyNodeModules = () => {
-    // return;
-    fse.copy( SRC_MODULES, path.join(DIST, 'node_modules'), (err) => {
+        if(getVersion(body) == $version) return cloneNodeModules();
+
+        var spinner = ora("downloading node_modules...")
+        spinner.start();
+        downloadRepo('HiShanFire/hi-gulp-cli', $tmp, {clone:false}, (err)=>{
+            spinner.stop();
+            if(err) return console.log(err)
+            console.log();
+            console.log(chalk.green('download success!'))
+        })
+        cloneNodeModules();
+        // .pipe(fs.createWriteStream($version_tmp))
+    }
+)
+
+function getVersion(data){
+    return eval('(function(){'+
+            'var v; v='+ data +';'+
+            'return v.version'
+            +'})()')
+}
+
+
+
+function cloneNodeModules(){
+    fse.copy( $tmp, $dist, (err) => {
         if(err) return console.log(err);
-        console.log(chalk.green('copy success! === node_modules/'))
+        console.log(chalk.green('copy success!'))
     })
 }
-// copyNodeModules();
-
-var copyGulpFile = ()=>{
-    fse.copy(path.resolve(SRC, '../resources'), DIST, (err)=>{
-        if(err) return console.log(err);
-        console.log(chalk.green('copy success! === gulpfile.js '))
-    })
-}
-// copyGulpFile();
+// request(
+//     {
+//         url: "https://github.com/HiShanFire/hi-gulp4-cli/raw/master/package.json"
+//     },
+//     function(err, res, body){
+//         var version = JSON.parse(body).version;
+//         console.log(local_version)
+//         console.log(version)
+//         var spinner = ora('downloading node_modules')
+//         spinner.start()
+//         downloadRepo('HiShanFire/hi-gulp4-cli', ydist, {clone:false}, (err)=>{
+//             if(err) return console.log(err)
+//             console.log(chalk.green('download success!'))
+//             spinner.stop()
+//         })
+//         // if(local_version.version == version){
+//         //     console.log('match')
+//         // }else{
+//         //     console.log('no match')
+//         // }
+//     }
+// )
+//
 
 // program
 //     .version('0.0.1')
